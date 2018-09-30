@@ -47,7 +47,7 @@ import java.util.Random;
  * @version  1.2
  * @author   Per Cederberg, per@percederberg.net
  */
-public class Game extends Object {
+public class Game {
 	public static int WIDTH = 10;
 	public static int HEIGHT = 20;
 
@@ -154,7 +154,7 @@ public class Game extends Object {
         board = new SquareBoard(width, height);
         board.setMessage("Press start");
         thread = new GameThread();
-		brain = new Brain(new Species(100, 5, 250, 5));
+		brain = new Brain(new Species(500, 10, 50, 20));
 		rng = new Random(51);
     }
 	
@@ -193,7 +193,6 @@ public class Game extends Object {
      * reset. Finally the game thread will be launched.
      */
     private void handleStart() {
-
         // Reset score and figures
         level = 2;
         score = 0;
@@ -219,8 +218,7 @@ public class Game extends Object {
      * reset all figures and print a game over message.
      */
     private void handleGameOver() {
-
-        // Stop game thred
+        // Stop game thread
         thread.setPaused(true);
 
         // Reset figures
@@ -317,11 +315,10 @@ public class Game extends Object {
      * directly.
      */
     private void handleFigureLanded() {
-
         // Check and detach figure
         if (figure.isAllVisible()) {
-            score = board.getRemovedLines();
-            //handleScoreModification();
+			score += 10;
+			handleScoreModification();
         } else {
             handleGameOver();
             return;
@@ -331,13 +328,11 @@ public class Game extends Object {
 
         // Check for full lines or create new figure
         if (board.hasFullLines()) {
-            board.removeFullLines();
-            if (level < 9 && level < board.getRemovedLines() / 10 ) {
-                level = board.getRemovedLines() / 10;
-                handleLevelModification();
-				score = board.getRemovedLines();
-				handleScoreModification();
-            }
+			board.removeFullLines();
+			if (level < 9 && board.getRemovedLines() / 20 > level) {
+				level = board.getRemovedLines() / 20;
+				handleLevelModification();
+			}
         } else {
             handleFigureStart();
         }
