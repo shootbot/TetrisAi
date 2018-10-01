@@ -1,5 +1,6 @@
+package game;
 /*
- * @(#)Figure.java
+ * @(#)game.Figure.java
  *
  * This work is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,15 +18,15 @@
 import java.awt.Color;
 
 /**
- * A class representing a Tetris square figure. Each figure consists 
- * of four connected squares in one of seven possible constellations. 
- * The figures may be rotated in 90 degree steps and have sideways and 
+ * A class representing a Tetris square figure. Each figure consists
+ * of four connected squares in one of seven possible constellations.
+ * The figures may be rotated in 90 degree steps and have sideways and
  * downwards movability.<p>
- * 
- * Each figure instance can have two states, either attached to a 
- * square board or not. When attached, all move and rotation 
+ *
+ * Each figure instance can have two states, either attached to a
+ * square board or not. When attached, all move and rotation
  * operations are checked so that collisions do not occur with other
- * squares on the board. When not attached, any rotation can be made 
+ * squares on the board. When not attached, any rotation can be made
  * (and will be kept when attached to a new board).
  *
  * @version  1.2
@@ -69,7 +70,7 @@ public class Figure extends Object {
     public static final int TRIANGLE_FIGURE = 7;
 
     /**
-     * The square board to which the figure is attached. If this 
+     * The square board to which the figure is attached. If this
      * variable is set to null, the figure is not attached.
      */
     private SquareBoard board = null;
@@ -87,33 +88,33 @@ public class Figure extends Object {
     public int yPos = 0;
 
     /**
-     * The figure orientation (or rotation). This value is normally 
-     * between 0 and 3, but must also be less than the maxOrientation 
+     * The figure orientation (or rotation). This value is normally
+     * between 0 and 3, but must also be less than the maxOrientation
      * value.
-     * 
+     *
      * @see #maxOrientation
      */
     public int orientation = 0;
 
     /**
-     * The maximum allowed orientation number. This is used to reduce 
+     * The maximum allowed orientation number. This is used to reduce
      * the number of possible rotations for some figures, such as the
-     * square figure. If this value is not used, the square figure 
-     * will be possible to rotate around one of its squares, which 
+     * square figure. If this value is not used, the square figure
+     * will be possible to rotate around one of its squares, which
      * gives an erroneous effect.
-     * 
+     *
      * @see #orientation
      */
     public int maxOrientation = 4;
 
     /**
-     * The horizontal coordinates of the figure shape. The coordinates 
+     * The horizontal coordinates of the figure shape. The coordinates
      * are relative to the current figure position and orientation.
      */
     public int[] shapeX = new int[4];
 
     /**
-     * The vertical coordinates of the figure shape. The coordinates 
+     * The vertical coordinates of the figure shape. The coordinates
      * are relative to the current figure position and orientation.
      */
     public int[] shapeY = new int[4];
@@ -129,7 +130,7 @@ public class Figure extends Object {
      * colors and orientations will be assigned.
      *
      * @param type      the figure type (one of the figure constants)
-     * 
+     *
      * @see #SQUARE_FIGURE
      * @see #LINE_FIGURE
      * @see #S_FIGURE
@@ -137,7 +138,7 @@ public class Figure extends Object {
      * @see #RIGHT_ANGLE_FIGURE
      * @see #LEFT_ANGLE_FIGURE
      * @see #TRIANGLE_FIGURE
-     * 
+     *
      * @throws IllegalArgumentException if the figure type specified
      *             is not recognized
      */
@@ -154,9 +155,9 @@ public class Figure extends Object {
 	
     /**
      * Initializes the instance variables for a specified figure type.
-     * 
+     *
      * @param type      the figure type (one of the figure constants)
-     * 
+     *
      * @see #SQUARE_FIGURE
      * @see #LINE_FIGURE
      * @see #S_FIGURE
@@ -164,7 +165,7 @@ public class Figure extends Object {
      * @see #RIGHT_ANGLE_FIGURE
      * @see #LEFT_ANGLE_FIGURE
      * @see #TRIANGLE_FIGURE
-     * 
+     *
      * @throws IllegalArgumentException if the figure type specified
      *             is not recognized
      */
@@ -264,14 +265,14 @@ public class Figure extends Object {
             shapeY[3] = 1;
             break;
         default :
-            throw new IllegalArgumentException("No figure constant: " + 
+            throw new IllegalArgumentException("No figure constant: " +
                                                type);
         }
     }
 
     /**
      * Checks if this figure is attached to a square board.
-     * 
+     *
      * @return true if the figure is already attached, or
      *         false otherwise
      */
@@ -280,14 +281,14 @@ public class Figure extends Object {
     }
 
     /**
-     * Attaches the figure to a specified square board. The figure 
-     * will be drawn either at the absolute top of the board, with 
-     * only the bottom line visible, or centered onto the board. In 
-     * both cases, the squares on the new board are checked for 
+     * Attaches the figure to a specified square board. The figure
+     * will be drawn either at the absolute top of the board, with
+     * only the bottom line visible, or centered onto the board. In
+     * both cases, the squares on the new board are checked for
      * collisions. If the squares are already occupied, this method
      * returns false and no attachment is made.<p>
      *
-     * The horizontal and vertical coordinates will be reset for the 
+     * The horizontal and vertical coordinates will be reset for the
      * figure, when centering the figure on the new board. The figure
      * orientation (rotation) will be kept, however. If the figure was
      * previously attached to another board, it will be detached from
@@ -295,7 +296,7 @@ public class Figure extends Object {
      *
      * @param board     the square board to attach to
      * @param center    the centered position flag
-     * 
+     *
      * @return true if the figure could be attached, or
      *         false otherwise
      */
@@ -326,7 +327,7 @@ public class Figure extends Object {
             }
         }
 
-        // Check position        
+        // Check position
         this.board = board;
         if (!canMoveTo(newX, newY, orientation)) {
             this.board = null;
@@ -354,8 +355,8 @@ public class Figure extends Object {
     /**
      * Checks if the figure is fully visible on the square board. If
      * the figure isn't attached to a board, false will be returned.
-     * 
-     * @return true if the figure is fully visible, or 
+     *
+     * @return true if the figure is fully visible, or
      *         false otherwise
      */
     public boolean isAllVisible() {
@@ -372,7 +373,7 @@ public class Figure extends Object {
 
     /**
      * Checks if the figure has landed. If this method returns true,
-     * the moveDown() or the moveAllWayDown() methods should have no 
+     * the moveDown() or the moveAllWayDown() methods should have no
      * effect. If no square board is attached, this method will return
      * true.
      *
@@ -384,9 +385,9 @@ public class Figure extends Object {
 
     /**
      * Moves the figure one step to the left. If such a move is not
-     * possible with respect to the square board, nothing is done. The 
-     * square board will be changed as the figure moves, clearing the 
-     * previous cells. If no square board is attached, nothing is 
+     * possible with respect to the square board, nothing is done. The
+     * square board will be changed as the figure moves, clearing the
+     * previous cells. If no square board is attached, nothing is
      * done.
      */
     public void moveLeft() {
@@ -400,9 +401,9 @@ public class Figure extends Object {
 
     /**
      * Moves the figure one step to the right. If such a move is not
-     * possible with respect to the square board, nothing is done. The 
-     * square board will be changed as the figure moves, clearing the 
-     * previous cells. If no square board is attached, nothing is 
+     * possible with respect to the square board, nothing is done. The
+     * square board will be changed as the figure moves, clearing the
+     * previous cells. If no square board is attached, nothing is
      * done.
      */
     public void moveRight() {
@@ -415,10 +416,10 @@ public class Figure extends Object {
     }
 
     /**
-     * Moves the figure one step down. If such a move is not possible 
-     * with respect to the square board, nothing is done. The square 
-     * board will be changed as the figure moves, clearing the 
-     * previous cells. If no square board is attached, nothing is 
+     * Moves the figure one step down. If such a move is not possible
+     * with respect to the square board, nothing is done. The square
+     * board will be changed as the figure moves, clearing the
+     * previous cells. If no square board is attached, nothing is
      * done.
      */
     public void moveDown() {
@@ -431,11 +432,11 @@ public class Figure extends Object {
     }
 
     /**
-     * Moves the figure all the way down. The limits of the move are 
-     * either the square board bottom, or squares not being empty. If 
-     * no move is possible with respect to the square board, nothing 
-     * is done. The square board will be changed as the figure moves, 
-     * clearing the previous cells. If no square board is attached, 
+     * Moves the figure all the way down. The limits of the move are
+     * either the square board bottom, or squares not being empty. If
+     * no move is possible with respect to the square board, nothing
+     * is done. The square board will be changed as the figure moves,
+     * clearing the previous cells. If no square board is attached,
      * nothing is done.
      */
     public void moveAllWayDown() {
@@ -462,7 +463,7 @@ public class Figure extends Object {
 
     /**
      * Returns the current figure rotation (orientation).
-     * 
+     *
      * @return the current figure rotation
      */
     public int getRotation() {
@@ -470,12 +471,12 @@ public class Figure extends Object {
     }
     
     /**
-     * Sets the figure rotation (orientation). If the desired rotation 
-     * is not possible with respect to the square board, nothing is 
+     * Sets the figure rotation (orientation). If the desired rotation
+     * is not possible with respect to the square board, nothing is
      * done. The square board will be changed as the figure moves,
-     * clearing the previous cells. If no square board is attached, 
+     * clearing the previous cells. If no square board is attached,
      * the rotation is performed directly.
-     * 
+     *
      * @param rotation  the new figure orientation
      */
     public void setRotation(int rotation) {
@@ -499,7 +500,7 @@ public class Figure extends Object {
      * Rotates the figure randomly. If such a rotation is not
      * possible with respect to the square board, nothing is done.
      * The square board will be changed as the figure moves,
-     * clearing the previous cells. If no square board is attached, 
+     * clearing the previous cells. If no square board is attached,
      * the rotation is performed directly.
      */
     public void rotateRandom() {
@@ -510,7 +511,7 @@ public class Figure extends Object {
      * Rotates the figure clockwise. If such a rotation is not
      * possible with respect to the square board, nothing is done.
      * The square board will be changed as the figure moves,
-     * clearing the previous cells. If no square board is attached, 
+     * clearing the previous cells. If no square board is attached,
      * the rotation is performed directly.
      */
     public void rotateClockwise() {
@@ -525,7 +526,7 @@ public class Figure extends Object {
      * Rotates the figure counter-clockwise. If such a rotation
      * is not possible with respect to the square board, nothing
      * is done. The square board will be changed as the figure
-     * moves, clearing the previous cells. If no square board is 
+     * moves, clearing the previous cells. If no square board is
      * attached, the rotation is performed directly.
      */
     public void rotateCounterClockwise() {
@@ -537,12 +538,12 @@ public class Figure extends Object {
     }
 
     /**
-     * Checks if a specified pair of (square) coordinates are inside 
+     * Checks if a specified pair of (square) coordinates are inside
      * the figure, or not.
      *
      * @param x         the horizontal position
      * @param y         the vertical position
-     * 
+     *
      * @return true if the coordinates are inside the figure, or
      *         false otherwise
      */
@@ -558,15 +559,15 @@ public class Figure extends Object {
     }
 
     /**
-     * Checks if the figure can move to a new position. The current 
-     * figure position is taken into account when checking for 
+     * Checks if the figure can move to a new position. The current
+     * figure position is taken into account when checking for
      * collisions. If a collision is detected, this method will return
      * false.
      *
      * @param newX            the new horizontal position
      * @param newY            the new vertical position
      * @param newOrientation  the new orientation (rotation)
-     * 
+     *
      * @return true if the figure can be moved, or
      *         false otherwise
      */
@@ -586,12 +587,12 @@ public class Figure extends Object {
 
     /**
      * Returns the relative horizontal position of a specified square.
-     * The square will be rotated according to the specified 
+     * The square will be rotated according to the specified
      * orientation.
      *
      * @param square       the square to rotate (0-3)
      * @param orientation  the orientation to use (0-3)
-     * 
+     *
      * @return the rotated relative horizontal position
      */
     public int getRelativeX(int square, int orientation) {
@@ -610,13 +611,13 @@ public class Figure extends Object {
     }
 
     /**
-     * Rotates the relative vertical position of a specified square. 
-     * The square will be rotated according to the specified 
+     * Rotates the relative vertical position of a specified square.
+     * The square will be rotated according to the specified
      * orientation.
      *
      * @param square       the square to rotate (0-3)
      * @param orientation  the orientation to use (0-3)
-     * 
+     *
      * @return the rotated relative vertical position
      */
     public int getRelativeY(int square, int orientation) {
@@ -658,7 +659,7 @@ public class Figure extends Object {
 		if (this.xPos == f.xPos &&
 			this.yPos == f.yPos &&
 			this.orientation == f.orientation &&
-			this.type == f.type) 
+			this.type == f.type)
 		{
 			return true;
 		} else {

@@ -1,11 +1,13 @@
+import game.*;
+
 import java.awt.*;
+
+import static game.Game.*;
 
 /**
  * Utility class
  */
 public class Ut {
-	public static final int WIDTH = 10;
-	public static final int HEIGHT = 20;
 
 	private static String boardToString(SquareBoard board, boolean withNewLines) {
 		StringBuilder sb = new StringBuilder();

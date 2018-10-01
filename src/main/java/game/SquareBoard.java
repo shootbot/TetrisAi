@@ -1,14 +1,14 @@
-/*
- * @(#)SquareBoard.java
+package game;/*
+ * @(#)game.SquareBoard.java
  *
  * This work is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation; either version 2 of 
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * This work is distributed in the hope that it will be useful, 
+ * This work is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * Copyright (c) 2003 Per Cederberg. All rights reserved.
@@ -27,8 +27,8 @@ import java.util.Hashtable;
 /**
  * A Tetris square board. The board is rectangular and contains a grid
  * of colored squares. The board is considered to be constrained to
- * both sides (left and right), and to the bottom. There is no 
- * constraint to the top of the board, although colors assigned to 
+ * both sides (left and right), and to the bottom. There is no
+ * constraint to the top of the board, although colors assigned to
  * positions above the board are not saved.
  *
  * @version  1.2
@@ -48,7 +48,7 @@ public class SquareBoard extends Object {
 
     /**
      * The square board color matrix. This matrix (or grid) contains
-     * a color entry for each square in the board. The matrix is 
+     * a color entry for each square in the board. The matrix is
      * indexed by the vertical, and then the horizontal coordinate.
      */
     private Color[][]  matrix = null;
@@ -60,14 +60,14 @@ public class SquareBoard extends Object {
     private String  message = null;
 
     /**
-     * The number of lines removed. This counter is increased each 
+     * The number of lines removed. This counter is increased each
      * time a line is removed from the board.
      */
     private int  removedLines = 0;
 
     /**
-     * The graphical sqare board component. This graphical 
-     * representation is created upon the first call to 
+     * The graphical sqare board component. This graphical
+     * representation is created upon the first call to
      * getComponent().
      */
     private SquareBoardComponent  component = null;
@@ -90,14 +90,14 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Checks if a specified square is empty, i.e. if it is not 
-     * marked with a color. If the square is outside the board, 
-     * false will be returned in all cases except when the square is 
+     * Checks if a specified square is empty, i.e. if it is not
+     * marked with a color. If the square is outside the board,
+     * false will be returned in all cases except when the square is
      * directly above the board.
      *
      * @param x         the horizontal position (0 <= x < width)
      * @param y         the vertical position (0 <= y < height)
-     * 
+     *
      * @return true if the square is emtpy, or
      *         false otherwise
      */
@@ -110,12 +110,12 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Checks if a specified line is empty, i.e. only contains 
+     * Checks if a specified line is empty, i.e. only contains
      * empty squares. If the line is outside the board, false will
      * always be returned.
      *
      * @param y         the vertical position (0 <= y < height)
-     * 
+     *
      * @return true if the whole line is empty, or
      *         false otherwise
      */
@@ -133,11 +133,11 @@ public class SquareBoard extends Object {
 
 	/**
      * Checks if a specified line is full, i.e. only contains no empty
-     * squares. If the line is outside the board, true will always be 
+     * squares. If the line is outside the board, true will always be
      * returned.
      *
      * @param y         the vertical position (0 <= y < height)
-     * 
+     *
      * @return true if the whole line is full, or
      *         false otherwise
      */
@@ -169,12 +169,12 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Returns a graphical component to draw the board. The component 
+     * Returns a graphical component to draw the board. The component
      * returned will automatically be updated when changes are made to
      * this board. Multiple calls to this method will return the same
      * component, as a square board can only have a single graphical
      * representation.
-     * 
+     *
      * @return a graphical component that draws this board
      */
     public Component getComponent() {
@@ -185,9 +185,9 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Returns the board height (in squares). This method returns, 
+     * Returns the board height (in squares). This method returns,
      * i.e, the number of vertical squares that fit on the board.
-     * 
+     *
      * @return the board height in squares
      */
     public int getBoardHeight() {
@@ -197,7 +197,7 @@ public class SquareBoard extends Object {
     /**
      * Returns the board width (in squares). This method returns, i.e,
      * the number of horizontal squares that fit on the board.
-     * 
+     *
      * @return the board width in squares
      */
     public int getBoardWidth() {
@@ -206,7 +206,7 @@ public class SquareBoard extends Object {
 
     /**
      * Returns the number of lines removed since the last clear().
-     * 
+     *
      * @return the number of lines removed since the last clear call
      */
     public int getRemovedLines() {
@@ -214,12 +214,12 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Returns the color of an individual square on the board. If the 
+     * Returns the color of an individual square on the board. If the
      * square is empty or outside the board, null will be returned.
      *
      * @param x         the horizontal position (0 <= x < width)
      * @param y         the vertical position (0 <= y < height)
-     * 
+     *
      * @return the square color, or null for none
      */
     public Color getSquareColor(int x, int y) {
@@ -231,9 +231,9 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Changes the color of an individual square on the board. The 
-     * square will be marked as in need of a repaint, but the 
-     * graphical component will NOT be repainted until the update() 
+     * Changes the color of an individual square on the board. The
+     * square will be marked as in need of a repaint, but the
+     * graphical component will NOT be repainted until the update()
      * method is called.
      *
      * @param x         the horizontal position (0 <= x < width)
@@ -251,8 +251,8 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Sets a message to display on the square board. This is supposed 
-     * to be used when the board is not being used for active drawing, 
+     * Sets a message to display on the square board. This is supposed
+     * to be used when the board is not being used for active drawing,
      * as it slows down the drawing considerably.
      *
      * @param message  a message to display, or null to remove a
@@ -266,8 +266,8 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Clears the board, i.e. removes all the colored squares. As 
-     * side-effects, the number of removed lines will be reset to 
+     * Clears the board, i.e. removes all the colored squares. As
+     * side-effects, the number of removed lines will be reset to
      * zero, and the component will be repainted immediately.
      */
     public void clear() {
@@ -283,11 +283,11 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Removes all full lines. All lines above a removed line will be 
-     * moved downward one step, and a new empty line will be added at 
-     * the top. After removing all full lines, the component will be 
+     * Removes all full lines. All lines above a removed line will be
+     * moved downward one step, and a new empty line will be added at
+     * the top. After removing all full lines, the component will be
      * repainted.
-     * 
+     *
      * @see #hasFullLines
      */
     public void removeFullLines() {
@@ -310,8 +310,8 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Removes a single line. All lines above are moved down one step, 
-     * and a new empty line is added at the top. No repainting will be 
+     * Removes a single line. All lines above are moved down one step,
+     * and a new empty line is added at the top. No repainting will be
      * done after removing the line.
      *
      * @param y         the vertical position (0 <= y < height)
@@ -331,7 +331,7 @@ public class SquareBoard extends Object {
     }
 
     /**
-     * Updates the graphical component. Any squares previously changed 
+     * Updates the graphical component. Any squares previously changed
      * will be repainted by this method.
      */
     public void update() {
@@ -341,37 +341,37 @@ public class SquareBoard extends Object {
 
     /**
      * The graphical component that paints the square board. This is
-     * implemented as an inner class in order to better abstract the 
+     * implemented as an inner class in order to better abstract the
      * detailed information that must be sent between the square board
      * and its graphical representation.
      */
     private class SquareBoardComponent extends Component {
 
         /**
-         * The component size. If the component has been resized, that 
-         * will be detected when the paint method executes. If this 
+         * The component size. If the component has been resized, that
+         * will be detected when the paint method executes. If this
          * value is set to null, the component dimensions are unknown.
          */
         private Dimension  size = null;
 
         /**
-         * The component insets. The inset values are used to create a 
-         * border around the board to compensate for a skewed aspect 
-         * ratio. If the component has been resized, the insets values 
+         * The component insets. The inset values are used to create a
+         * border around the board to compensate for a skewed aspect
+         * ratio. If the component has been resized, the insets values
          * will be recalculated when the paint method executes.
          */
         private Insets  insets = new Insets(0, 0, 0, 0);
 
         /**
-         * The square size in pixels. This value is updated when the 
-         * component size is changed, i.e. when the <code>size</code> 
+         * The square size in pixels. This value is updated when the
+         * component size is changed, i.e. when the <code>size</code>
          * variable is modified.
          */
         private Dimension  squareSize = new Dimension(0, 0);
 
         /**
          * An image used for double buffering. The board is first
-         * painted onto this image, and that image is then painted 
+         * painted onto this image, and that image is then painted
          * onto the real surface in order to avoid making the drawing
          * process visible to the user. This image is recreated each
          * time the component size changes.
@@ -379,8 +379,8 @@ public class SquareBoard extends Object {
         private Image  bufferImage = null;
 
         /**
-         * A clip boundary buffer rectangle. This rectangle is used 
-         * when calculating the clip boundaries, in order to avoid 
+         * A clip boundary buffer rectangle. This rectangle is used
+         * when calculating the clip boundaries, in order to avoid
          * allocating a new clip rectangle for each board square.
          */
         private Rectangle  bufferRect = new Rectangle();
@@ -392,7 +392,7 @@ public class SquareBoard extends Object {
 
         /**
          * A lookup table containing lighter versions of the colors.
-         * This table is used to avoid calculating the lighter 
+         * This table is used to avoid calculating the lighter
          * versions of the colors for each and every square drawn.
          */
         private Hashtable  lighterColors = new Hashtable();
@@ -410,7 +410,7 @@ public class SquareBoard extends Object {
         private boolean  updated = true;
 
         /**
-         * A bounding box of the squares to update. The coordinates 
+         * A bounding box of the squares to update. The coordinates
          * used in the rectangle refers to the square matrix.
          */
         private Rectangle  updateRect = new Rectangle();
@@ -419,9 +419,9 @@ public class SquareBoard extends Object {
          * Creates a new square board component.
          */
         public SquareBoardComponent() {
-            setBackground(Configuration.getColor("board.background", 
+            setBackground(Configuration.getColor("board.background",
                                                  "#000000"));
-            messageColor = Configuration.getColor("board.message", 
+            messageColor = Configuration.getColor("board.message",
                                                   "#ffffff");
         }
 
@@ -456,8 +456,8 @@ public class SquareBoard extends Object {
 
 
         /**
-         * Redraws all the invalidated squares. If no squares have 
-         * been marked as in need of redrawing, no redrawing will 
+         * Redraws all the invalidated squares. If no squares have
+         * been marked as in need of redrawing, no redrawing will
          * occur.
          */
         public void redraw() {
@@ -482,16 +482,16 @@ public class SquareBoard extends Object {
 
             updated = true;
             g = getGraphics();
-            g.setClip(insets.left, 
-                      insets.top, 
-                      width * squareSize.width, 
+            g.setClip(insets.left,
+                      insets.top,
+                      width * squareSize.width,
                       height * squareSize.height);
             paint(g);
         }
 
         /**
          * Returns true as this component is double buffered.
-         * 
+         *
          * @return true as this component is double buffered
          */
         public boolean isDoubleBuffered() {
@@ -500,7 +500,7 @@ public class SquareBoard extends Object {
         
         /**
          * Returns the preferred size of this component.
-         * 
+         *
          * @return the preferred component size
          */
         public Dimension getPreferredSize() {
@@ -509,7 +509,7 @@ public class SquareBoard extends Object {
 
         /**
          * Returns the minimum size of this component.
-         * 
+         *
          * @return the minimum component size
          */
         public Dimension getMinimumSize() {
@@ -518,7 +518,7 @@ public class SquareBoard extends Object {
 
         /**
          * Returns the maximum size of this component.
-         * 
+         *
          * @return the maximum component size
          */
         public Dimension getMaximumSize() {
@@ -526,14 +526,14 @@ public class SquareBoard extends Object {
         }
 
         /**
-         * Returns a lighter version of the specified color. The 
+         * Returns a lighter version of the specified color. The
          * lighter color will looked up in a hashtable, making this
-         * method fast. If the color is not found, the ligher color 
+         * method fast. If the color is not found, the ligher color
          * will be calculated and added to the lookup table for later
          * reference.
-         * 
+         *
          * @param c     the base color
-         * 
+         *
          * @return the lighter version of the color
          */
         private Color getLighterColor(Color c) {
@@ -548,14 +548,14 @@ public class SquareBoard extends Object {
         }
 
         /**
-         * Returns a darker version of the specified color. The 
+         * Returns a darker version of the specified color. The
          * darker color will looked up in a hashtable, making this
-         * method fast. If the color is not found, the darker color 
+         * method fast. If the color is not found, the darker color
          * will be calculated and added to the lookup table for later
          * reference.
-         * 
+         *
          * @param c     the base color
-         * 
+         *
          * @return the darker version of the color
          */
         private Color getDarkerColor(Color c) {
@@ -570,10 +570,10 @@ public class SquareBoard extends Object {
         }
 
         /**
-         * Paints this component indirectly. The painting is first 
-         * done to a buffer image, that is then painted directly to 
+         * Paints this component indirectly. The painting is first
+         * done to a buffer image, that is then painted directly to
          * the specified graphics context.
-         * 
+         *
          * @param g     the graphics context to use
          */
         public synchronized void paint(Graphics g) {
@@ -594,41 +594,41 @@ public class SquareBoard extends Object {
                 insets.right = insets.left;
                 insets.top = 0;
                 insets.bottom = size.height - height * squareSize.height;
-                bufferImage = createImage(width * squareSize.width, 
+                bufferImage = createImage(width * squareSize.width,
                                           height * squareSize.height);
             }
 
             // Paint component in buffer image
             rect = g.getClipBounds();
             bufferGraphics = bufferImage.getGraphics();
-            bufferGraphics.setClip(rect.x - insets.left, 
-                                   rect.y - insets.top, 
-                                   rect.width, 
+            bufferGraphics.setClip(rect.x - insets.left,
+                                   rect.y - insets.top,
+                                   rect.width,
                                    rect.height);
             paintComponent(bufferGraphics);
 
             // Paint image buffer
-            g.drawImage(bufferImage, 
+            g.drawImage(bufferImage,
                         insets.left,
-                        insets.top, 
-                        getBackground(), 
+                        insets.top,
+                        getBackground(),
                         null);
         }
 
         /**
-         * Paints this component directly. All the squares on the 
+         * Paints this component directly. All the squares on the
          * board will be painted directly to the specified graphics
          * context.
-         * 
+         *
          * @param g     the graphics context to use
          */
         private void paintComponent(Graphics g) {
 
             // Paint background
             g.setColor(getBackground());
-            g.fillRect(0, 
-                       0, 
-                       width * squareSize.width, 
+            g.fillRect(0,
+                       0,
+                       width * squareSize.width,
                        height * squareSize.height);
             
             // Paint squares
@@ -647,7 +647,7 @@ public class SquareBoard extends Object {
         }
 
         /**
-         * Paints a single board square. The specified position must 
+         * Paints a single board square. The specified position must
          * contain a color object.
          *
          * @param g     the graphics context to use

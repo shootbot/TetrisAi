@@ -1,7 +1,14 @@
+package bot;
+
+import game.*;
+import genetic.*;
+
 import java.util.*;
 import java.awt.Color;
 
-class Brain {
+import static game.Game.*;
+
+public class Brain {
 	private int[][] field;
 	private int[][] tmpField;
 	private int maxScore;
@@ -28,8 +35,8 @@ class Brain {
 
 	public String[] getFigureMoves(SquareBoard board, Figure f) {
 		Color[][] matrix = board.getMatrix();
-		for (int i = 0; i < 20; i++) {
-			for (int j = 0; j < 10; j++) {
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WIDTH; j++) {
 				field[i][j] = (matrix[i][j] == null ? 0 : 1);
 			}
 		}
@@ -136,9 +143,9 @@ class Brain {
 	}
 
 	public void removeFullLines() {
-		for (int y = Game.HEIGHT - 1; y >= 0; y--) {
+		for (int y = HEIGHT - 1; y >= 0; y--) {
 			boolean lineIsFull = true;
-			for (int x = 0; x < Game.WIDTH; x++) {
+			for (int x = 0; x < WIDTH; x++) {
 				if (tmpField[y][x] == 0) {
 					lineIsFull = false;
 					break;
@@ -146,11 +153,11 @@ class Brain {
 			}
 			if (lineIsFull) {
 				for (int y2 = y; y2 > 0; y2--) {
-					for (int x = 0; x < Game.WIDTH; x++) {
+					for (int x = 0; x < WIDTH; x++) {
 						tmpField[y2][x] = tmpField[y2 - 1][x];
 					}
 				}
-				for (int x = 0; x < Game.WIDTH; x++) {
+				for (int x = 0; x < WIDTH; x++) {
 					tmpField[0][x] = 0;
 				}
 				y++;
@@ -180,8 +187,8 @@ class Brain {
 
 	public int evaluateRoofs() {
 		int score = 0;
-		for (int i = 1; i < Game.HEIGHT; i++) {
-			for (int j = 0; j < Game.WIDTH; j++) {
+		for (int i = 1; i < HEIGHT; i++) {
+			for (int j = 0; j < WIDTH; j++) {
 				if (tmpField[i][j] == 0 && tmpField[i - 1][j] == 1) {
 					int roofHeight = 0;
 					int k = i;
@@ -198,8 +205,8 @@ class Brain {
 
 	public int evaluateSquares() {
 		int score = 0;
-		for (int y = 0; y < Game.HEIGHT; y++) {
-			for (int x = 0; x < Game.WIDTH; x++) {
+		for (int y = 0; y < HEIGHT; y++) {
+			for (int x = 0; x < WIDTH; x++) {
 				if (tmpField[y][x] != 0) {
 					score += Math.abs(5 - x);
 					if (y < 10) {
@@ -218,11 +225,11 @@ class Brain {
 	public int evaluateCliffs() {
 		int score = 0;
 		// height of each column
-		int[] height = new int[Game.WIDTH];
-		for (int x = 0; x < Game.WIDTH; x++) {
-			for (int y = 0; y < Game.HEIGHT; y++) {
+		int[] height = new int[WIDTH];
+		for (int x = 0; x < WIDTH; x++) {
+			for (int y = 0; y < HEIGHT; y++) {
 				if (tmpField[y][x] != 0) {
-					height[x] = Game.HEIGHT - y;
+					height[x] = HEIGHT - y;
 					break;
 				}
 			}
@@ -236,12 +243,12 @@ class Brain {
 		}
 
 		// rightmost is cliff?
-		if (height[Game.WIDTH - 2] - height[Game.WIDTH - 1] > 1) {
+		if (height[WIDTH - 2] - height[WIDTH - 1] > 1) {
 			cliffs++;
-			dhTotal += height[Game.WIDTH - 2] - height[Game.WIDTH - 1];
+			dhTotal += height[WIDTH - 2] - height[WIDTH - 1];
 		}
 
-		for (int x = 1; x < Game.WIDTH - 1; x++) {
+		for (int x = 1; x < WIDTH - 1; x++) {
 			int dhLeft = height[x - 1] - height[x];
 			int dhRight = height[x + 1] - height[x];
 			if (dhLeft > 1 && dhRight > 1) {
@@ -276,4 +283,3 @@ class Brain {
 		return tmpField;
 	}
 }
-	

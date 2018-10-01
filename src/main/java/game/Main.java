@@ -1,5 +1,5 @@
-/*
- * @(#)Main.java
+package game;/*
+ * @(#)game.Main.java
  *
  * This work is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -15,7 +15,6 @@
  */
 
 import java.applet.Applet;
-import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -34,29 +33,29 @@ public class Main extends Applet {
      * The applet parameter information structure.
      */
     private static final String PARAMETER[][] = {
-        { "tetris.color.background", "color", 
+        { "tetris.color.background", "color",
             "The overall background color." },
-        { "tetris.color.label", "color", 
+        { "tetris.color.label", "color",
             "The text color of the labels." },
-        { "tetris.color.button", "color", 
-            "The start and pause button bolor." }, 
-        { "tetris.color.board.background", "color", 
+        { "tetris.color.button", "color",
+            "The start and pause button bolor." },
+        { "tetris.color.board.background", "color",
             "The background game board color." },
-        { "tetris.color.board.message", "color", 
+        { "tetris.color.board.message", "color",
             "The game board message color." },
-        { "tetris.color.figure.square", "color", 
+        { "tetris.color.figure.square", "color",
             "The color of the square figure." },
-        { "tetris.color.figure.line", "color", 
+        { "tetris.color.figure.line", "color",
             "The color of the line figure." },
-        { "tetris.color.figure.s", "color", 
+        { "tetris.color.figure.s", "color",
             "The color of the 's' curved figure." },
-        { "tetris.color.figure.z", "color", 
+        { "tetris.color.figure.z", "color",
             "The color of the 'z' curved figure." },
-        { "tetris.color.figure.right", "color", 
+        { "tetris.color.figure.right", "color",
             "The color of the right angle figure." },
-        { "tetris.color.figure.left", "color", 
+        { "tetris.color.figure.left", "color",
             "The color of the left angle figure." },
-        { "tetris.color.figure.triangle", "color", 
+        { "tetris.color.figure.triangle", "color",
             "The color of the triangle figure." }
     };
 
@@ -67,7 +66,7 @@ public class Main extends Applet {
 
     /**
      * The stand-alone main routine.
-     * 
+     *
      * @param args      the command-line arguments
      */
     public static void main(String[] args) {
@@ -90,9 +89,9 @@ public class Main extends Applet {
     }
 
     /**
-     * Returns information about the parameters that are understood by 
+     * Returns information about the parameters that are understood by
      * this applet.
-     * 
+     *
      * @return an array describing the parameters to this applet
      */
     public String[][] getParameterInfo() {
@@ -109,12 +108,12 @@ public class Main extends Applet {
         for (int i = 0; i < PARAMETER.length; i++) {
             value = getParameter(PARAMETER[i][0]);
             if (value != null) {
-                Configuration.setValue(PARAMETER[i][0], value);
+                game.Configuration.setValue(PARAMETER[i][0], value);
             }
         }
 
         // Create game object
-        game = new Game();
+        game = new game.Game();
 
         // Initialize applet component
         setLayout(new BorderLayout());
@@ -133,7 +132,7 @@ public class Main extends Applet {
      * A dummy COM object wrapper. This class has been created only to
      * avoid the erroneous HTTP lookup for it when the Tetris game is
      * run as an applet in some browsers.
-     * 
+     *
      * @version  1.0
      * @author   Per Cederberg, per@percederberg.net
      */
