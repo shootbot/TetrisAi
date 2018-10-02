@@ -97,44 +97,11 @@ public class Main extends Applet {
     }
 
     /**
-     * Initializes the game in applet mode.
-     */
-    /*public void init() {
-        String  value;
-
-        // Set all configuration parameters
-        for (int i = 0; i < PARAMETER.length; i++) {
-            value = getParameter(PARAMETER[i][0]);
-            if (value != null) {
-                game.Configuration.setValue(PARAMETER[i][0], value);
-            }
-        }
-
-        // Create game object
-        game = new game.Game();
-
-        // Initialize applet component
-        setLayout(new BorderLayout());
-        add(game.getComponent(), "Center");
-    }*/
-
-    /**
      * Stops the game in applet mode.
      */
     public void stop() {
         game.quit();
     }
     
-    
-    /**
-     * A dummy COM object wrapper. This class has been created only to
-     * avoid the erroneous HTTP lookup for it when the Tetris game is
-     * run as an applet in some browsers.
-     *
-     * @version  1.0
-     * @author   Per Cederberg, per@percederberg.net
-     */
-    /*public static class COMClassObject extends Object {
-    
-    }*/
+
 }

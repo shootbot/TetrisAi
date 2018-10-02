@@ -5,6 +5,9 @@ import java.util.*;
 import static genetic.GenAlg.*;
 
 public class Species implements Comparable {
+    static final double MUTATION_FACTOR = 0.1;
+
+
     public double score;
     public int holePenalty;
     public int roofPenalty;
@@ -59,17 +62,17 @@ public class Species implements Comparable {
         squarePenalty += getAdjustment(SQUARE_P_MIN, SQUARE_P_MAX);
         cliffPenalty += getAdjustment(CLIFF_P_MIN, CLIFF_P_MAX);
     
-        if (holePenalty > HOLE_P_MAX) holePenalty = HOLE_P_MAX;
-        if (holePenalty < HOLE_P_MIN) holePenalty = HOLE_P_MIN;
-        if (roofPenalty > ROOF_P_MAX) roofPenalty = ROOF_P_MAX;
-        if (roofPenalty < ROOF_P_MIN) roofPenalty = ROOF_P_MIN;
-        if (squarePenalty > SQUARE_P_MAX) squarePenalty = SQUARE_P_MAX;
-        if (squarePenalty < SQUARE_P_MIN) squarePenalty = SQUARE_P_MIN;
-        if (cliffPenalty > CLIFF_P_MAX) cliffPenalty = CLIFF_P_MAX;
-        if (cliffPenalty < CLIFF_P_MIN) cliffPenalty = CLIFF_P_MIN;
+//        if (holePenalty > HOLE_P_MAX) holePenalty = HOLE_P_MAX;
+//        if (holePenalty < HOLE_P_MIN) holePenalty = HOLE_P_MIN;
+//        if (roofPenalty > ROOF_P_MAX) roofPenalty = ROOF_P_MAX;
+//        if (roofPenalty < ROOF_P_MIN) roofPenalty = ROOF_P_MIN;
+//        if (squarePenalty > SQUARE_P_MAX) squarePenalty = SQUARE_P_MAX;
+//        if (squarePenalty < SQUARE_P_MIN) squarePenalty = SQUARE_P_MIN;
+//        if (cliffPenalty > CLIFF_P_MAX) cliffPenalty = CLIFF_P_MAX;
+//        if (cliffPenalty < CLIFF_P_MIN) cliffPenalty = CLIFF_P_MIN;
     }
     
     private int getAdjustment(int min, int max) {
-        return (int)((max - min) * 0.1 * (rng.nextDouble() * 2 - 1));
+        return (int)((max - min) * MUTATION_FACTOR * (rng.nextDouble() * 2 - 1));
     }
 }

@@ -14,8 +14,8 @@ public class Brain {
     private int maxScore;
     private Species sp;
     private Set<Figure> visited = new HashSet<>();
-    private LinkedList<String> maxMoves;
-    private LinkedList<String> moves = new LinkedList<>();
+    private LinkedList<Move> maxMoves;
+    private LinkedList<Move> moves = new LinkedList<>();
     
     public Brain() {
     }
@@ -32,7 +32,7 @@ public class Brain {
         this.sp = sp;
     }
     
-    public String[] getFigureMoves(SquareBoard board, Figure f) {
+    public Move[] getFigureMoves(SquareBoard board, Figure f) {
         Color[][] matrix = board.getMatrix();
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
@@ -54,10 +54,10 @@ public class Brain {
         maxScore = -999999;
         checkMove(moves, f);
 //        log("maxMoves: " + maxMoves.toString());
-        return maxMoves.toArray(new String[maxMoves.size()]);
+        return maxMoves.toArray(new Move[maxMoves.size()]);
     }
     
-    private void checkMove(LinkedList<String> moves, Figure f) {
+    private void checkMove(LinkedList<Move> moves, Figure f) {
 //		System.out.println("+ " + f.xPos + " " + f.yPos + " " + f.orientation);
         if (visited.contains(f)) {
 //			System.out.println("-visited");
@@ -69,7 +69,7 @@ public class Brain {
         if (canMoveTo(f, f.xPos, f.yPos + 1, f.orientation)) {
             // move down
             f.yPos += 1;
-            moves.add("Down");
+            moves.add(Move.DOWN);
             checkMove(moves, f);
             moves.removeLast();
             f.yPos -= 1;
@@ -79,7 +79,7 @@ public class Brain {
             int oldOrientation = f.orientation;
             f.orientation = (f.orientation + 1) % f.maxOrientation;
 //			System.out.print("Turn ");
-            moves.add("Rotate");
+            moves.add(Move.ROTATE);
             checkMove(moves, f);
             moves.removeLast();
             f.orientation = oldOrientation;
@@ -87,7 +87,7 @@ public class Brain {
         if (canMoveTo(f, f.xPos - 1, f.yPos, f.orientation)) {
             // move left
             f.xPos -= 1;
-            moves.add("Left");
+            moves.add(Move.LEFT);
             checkMove(moves, f);
             moves.removeLast();
             f.xPos += 1;
@@ -95,7 +95,7 @@ public class Brain {
         if (canMoveTo(f, f.xPos + 1, f.yPos, f.orientation)) {
             // move right
             f.xPos += 1;
-            moves.add("Right");
+            moves.add(Move.RIGHT);
             checkMove(moves, f);
             moves.removeLast();
             f.xPos -= 1;
@@ -104,23 +104,19 @@ public class Brain {
         if (!canMoveTo(f, f.xPos, f.yPos + 1, f.orientation)) {
             // got a final position
             int score = getScore(f);
-//			System.out.println("score: " + score);
             if (maxScore < score || (maxScore == score && maxMoves.size() > moves.size())) {
-//				System.out.println("maxScore overcame " + f.xPos + " " + f.yPos + " " + f.orientation);
                 maxScore = score;
-                maxMoves = (LinkedList<String>) moves.clone();
+                maxMoves = (LinkedList<Move>) moves.clone();
             }
         }
-//		System.out.println("-");
     }
     
     
     private int getScore(Figure f) {
-        //System.out.println("getScore: " + f.xPos + " " + f.yPos + " " + f.orientation);
         int score = 0;
         // copy field to avoid destroying it when removing full lines
-        for (int y = 0; y < 20; y++) {
-            for (int x = 0; x < 10; x++) {
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
                 tmpField[y][x] = field[y][x];
             }
         }

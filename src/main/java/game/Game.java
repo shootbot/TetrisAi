@@ -13,12 +13,6 @@ package game;/*
  *
  * Copyright (c) 2003 Per Cederberg. All rights reserved.
  */
-// ����� ������ �����
-// �� ������ �������� ����� �������� ������ � ������ ������������ (������� "�����")
-// ������� ����� ������� �����
-// �� �������� �������� �� �������� "���������"
-// ��� ����� ������� �������, �� ����� �������� � �����
-// �� ������ � �������� ������
 
 import bot.*;
 import genetic.*;
@@ -87,7 +81,7 @@ public class Game {
      * The game level. The level will be increased for every 20 lines
      * removed from the square board.
      */
-    private int level = 2;
+    private int level = 5;
     
     /**
      * The current score. The score is increased for every figure that
@@ -142,7 +136,7 @@ public class Game {
         board = new SquareBoard(width, height);
         board.setMessage("Press start");
         thread = new GameThread();
-        brain = new Brain(new Species(500, 10, 50, 20));
+        brain = new Brain(new Species(1094, 94, 42, 320));
     }
     
     /**
@@ -337,7 +331,7 @@ public class Game {
             positionChosen = false;
         } else if (!positionChosen) {
 //			System.out.println("handleTimer positionNotChosen");
-            String[] moves = brain.getFigureMoves(board, figure);
+            Move[] moves = brain.getFigureMoves(board, figure);
             moveFigure(moves);
             positionChosen = true;
         } else {
@@ -348,20 +342,20 @@ public class Game {
         }
     }
     
-    private void moveFigure(String[] moves) {
-        for (String move : moves) {
+    private void moveFigure(Move[] moves) {
+        for (Move move : moves) {
             switch (move) {
-                case "Down":
+                case DOWN:
                     figure.moveDown();
                     break;
-                case "Left":
+                case LEFT:
                     figure.moveLeft();
 //					delay(50);
                     break;
-                case "Right":
+                case RIGHT:
                     figure.moveRight();
                     break;
-                case "Rotate": // clockwise
+                case ROTATE: // clockwise
                     figure.rotateClockwise();
                     break;
             }
