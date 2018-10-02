@@ -4,10 +4,10 @@ import bot.*;
 
 import java.util.*;
 
-public class GenAlg {
+public class Evolution {
 	private static final int SPECIES_NUM = 8;
 	private static final int TESTS_NUM = 5;
-	private static final int GENERATIONS_NUM = 30;
+	private static final int GENERATIONS_NUM = 100;
 
 	public static final int HOLE_P_MAX = 1000;
 	public static final int HOLE_P_MIN = -1000;
@@ -21,9 +21,8 @@ public class GenAlg {
     private Species[] species = new Species[SPECIES_NUM];
     private static Random rng = new Random();
     private AiGame game = new AiGame();
-
     
-    public GenAlg() {
+    public Evolution() {
         for (int i = 0; i < SPECIES_NUM; i++) {
             species[i] = new Species();
         }
@@ -31,24 +30,24 @@ public class GenAlg {
     
     public static void main(String[] args) {
     	long startTime = System.nanoTime();
-        GenAlg ga = new GenAlg();
-        ga.doEvolution();
+        Evolution evo = new Evolution();
+        evo.go();
 		System.out.println((System.nanoTime() - startTime) / 1000_000_000L);
     }
     
-    public void doEvolution() {
+    public void go() {
         for (int i = 0; i < GENERATIONS_NUM; i++) {
-            testAndSort();
+            selection();
             crossover();
             mutation();
         }
         
-        testAndSort();
+        selection();
         Species winner = species[0];
         System.out.println("Winner " + winner.score + ": " + winner);
     }
     
-    private void testAndSort() {
+    private void selection() {
         for (int i = 0; i < SPECIES_NUM; i++) {
             System.out.println("Testing " + species[i]);
             double score = playGame(species[i], TESTS_NUM);
@@ -81,7 +80,7 @@ public class GenAlg {
     
     private void mutation() {
         for (int i = 0; i < SPECIES_NUM; i++) {
-            species[i].normalize();
+            species[i].mutate();
         }
     }
 }

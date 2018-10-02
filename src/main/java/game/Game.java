@@ -81,7 +81,7 @@ public class Game {
      * The game level. The level will be increased for every 20 lines
      * removed from the square board.
      */
-    private int level = 5;
+    private int level;
     
     /**
      * The current score. The score is increased for every figure that
@@ -177,7 +177,7 @@ public class Game {
         board.clear();
         
         
-        level = 2;
+        level = 5;
         board.setMessage(null);
         previewBoard.clear();
         handleLevelModification();

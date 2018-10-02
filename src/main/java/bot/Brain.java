@@ -56,11 +56,15 @@ public class Brain {
 //        log("maxMoves: " + maxMoves.toString());
         return maxMoves.toArray(new Move[maxMoves.size()]);
     }
-    
-    private void checkMove(LinkedList<Move> moves, Figure f) {
-//		System.out.println("+ " + f.xPos + " " + f.yPos + " " + f.orientation);
+
+	/**
+	 * Depth first search of best moves' sequence
+	 *
+	 * @param moves
+	 * @param f
+	 */
+	private void checkMove(LinkedList<Move> moves, Figure f) {
         if (visited.contains(f)) {
-//			System.out.println("-visited");
             return;
         } else {
             visited.add(f);
@@ -110,7 +114,7 @@ public class Brain {
             }
         }
     }
-    
+
     
     private int getScore(Figure f) {
         int score = 0;
@@ -132,7 +136,6 @@ public class Brain {
         score += evaluateSquares();
         score += evaluateCliffs();
         
-        //System.out.println("x, y, orient, score: " + xPos + " " + yPos + " " + newOrientation + " " + score);
         return score;
     }
     
@@ -161,11 +164,10 @@ public class Brain {
     
     public int evaluateHoles() {
         int score = 0;
-        int holeHeight = 0;
         for (int x = 0; x < 10; x++) {
             for (int y = 19; y >= 0; y--) {
                 if (tmpField[y][x] == 0) {
-                    holeHeight = 0;
+                    int holeHeight = 0;
                     do {
                         y--;
                         holeHeight++;

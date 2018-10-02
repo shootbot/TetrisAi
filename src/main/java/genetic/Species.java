@@ -2,11 +2,10 @@ package genetic;
 
 import java.util.*;
 
-import static genetic.GenAlg.*;
+import static genetic.Evolution.*;
 
 public class Species implements Comparable {
     static final double MUTATION_FACTOR = 0.1;
-
 
     public double score;
     public int holePenalty;
@@ -18,9 +17,9 @@ public class Species implements Comparable {
     
     public Species() {
         this.holePenalty = genRandom(HOLE_P_MIN, HOLE_P_MAX);
-        this.roofPenalty = genRandom(GenAlg.ROOF_P_MIN, GenAlg.ROOF_P_MAX);
-        this.squarePenalty = genRandom(GenAlg.SQUARE_P_MIN, GenAlg.SQUARE_P_MAX);
-        this.cliffPenalty = genRandom(GenAlg.CLIFF_P_MIN, GenAlg.CLIFF_P_MAX);
+        this.roofPenalty = genRandom(Evolution.ROOF_P_MIN, Evolution.ROOF_P_MAX);
+        this.squarePenalty = genRandom(Evolution.SQUARE_P_MIN, Evolution.SQUARE_P_MAX);
+        this.cliffPenalty = genRandom(Evolution.CLIFF_P_MIN, Evolution.CLIFF_P_MAX);
     }
     
     public Species(int holePenalty, int roofPenalty, int squarePenalty, int cliffPenalty) {
@@ -41,12 +40,14 @@ public class Species implements Comparable {
         int resCliffPenalty = (cliffPenalty + sp2.cliffPenalty) / 2;
         return new Species(resHolePenalty, resRoofPenalty, resSquarePenalty, resCliffPenalty);
     }
-    
+
+    @Override
     public int compareTo(Object ob) {
         Species other = (Species) ob;
         return -Double.compare(score, other.score);
     }
-    
+
+	@Override
     public String toString() {
         String answer = "Species{hole: " + holePenalty
                 + ", roof: " + roofPenalty
@@ -56,7 +57,7 @@ public class Species implements Comparable {
         return answer;
     }
     
-    public void normalize() {
+    public void mutate() {
         holePenalty += getAdjustment(HOLE_P_MIN, HOLE_P_MAX);
         roofPenalty += getAdjustment(ROOF_P_MIN, ROOF_P_MAX);
         squarePenalty += getAdjustment(SQUARE_P_MIN, SQUARE_P_MAX);

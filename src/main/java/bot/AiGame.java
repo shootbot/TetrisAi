@@ -99,6 +99,7 @@ public class AiGame {
 	}
 
 	public int play(Species sp, int numberOfGames) {
+		totalScore = 0;
 		brain.setSpecies(sp);
 //        ExecutorService es = Executors.newFixedThreadPool(1);
 		this.numberOfGames = numberOfGames;
