@@ -70,14 +70,12 @@ public class Main extends Applet {
      * @param args      the command-line arguments
      */
     public static void main(String[] args) {
-        Frame  frame = new Frame("Tetris");
-        Game   game = new Game();
+        Frame frame = new Frame("Tetris");
+        Game game = new Game();
 
-        // Set up frame
         frame.add(game.getComponent());
         frame.pack();
 
-        // Add frame window listener
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);

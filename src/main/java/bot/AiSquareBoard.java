@@ -33,6 +33,10 @@ public class AiSquareBoard extends SquareBoard {
     public Color[][] getMatrix() {
         return matrix;
     }
+    
+    public AiSquareBoard() {
+    }
+    
     /**
      * Creates a new square board with the specified size. The square
      * board will initially be empty.
@@ -41,7 +45,10 @@ public class AiSquareBoard extends SquareBoard {
      * @param height    the height of the board (in squares)
      */
     public AiSquareBoard(int width, int height) {
-        super(width, height);
+        this.width = width;
+        this.height = height;
+        this.matrix = new Color[height][width];
+        clear();
     }
     
     /**
@@ -122,7 +129,6 @@ public class AiSquareBoard extends SquareBoard {
         }
         return false;
     }
-    
     
     /**
      * Returns the board height (in squares). This method returns,
@@ -242,4 +248,6 @@ public class AiSquareBoard extends SquareBoard {
     }
     
     public void setMessage(String msg) {}
+    
+    public void update() {}
 }

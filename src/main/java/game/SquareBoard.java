@@ -35,7 +35,10 @@ import java.util.Hashtable;
  * @author   Per Cederberg, per@percederberg.net
  */
 public class SquareBoard extends Object {
-
+    
+    public SquareBoard() {
+    }
+    
     /**
      * The board width (in squares)
      */

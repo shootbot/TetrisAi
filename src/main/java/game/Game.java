@@ -23,23 +23,9 @@ package game;/*
 import bot.*;
 import genetic.*;
 
-import java.awt.Button;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Label;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.beans.*;
-import java.util.Random;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
 /**
  * The Tetris game. This class controls all events in the game and
@@ -47,30 +33,28 @@ import java.util.Random;
  * interaction with the graphical game component provided by this
  * class.
  *
- * @version  1.2
- * @author   Per Cederberg, per@percederberg.net
+ * @author Per Cederberg, per@percederberg.net
+ * @version 1.2
  */
 public class Game {
-	public static int WIDTH = 10;
-	public static int HEIGHT = 20;
-
-	private boolean positionChosen = false; // true if AI has chosen place for current brick
-    private PropertyChangeSupport support = new PropertyChangeSupport(this);
-	private boolean isAiGame = false; // true for maximum speed automated play
-	private Brain brain; // AI
-	private Random rng;
-
+    public static int WIDTH = 10;
+    public static int HEIGHT = 20;
+    
+    private boolean positionChosen = false; // true if AI has chosen place for current figure
+    private Brain brain; // AI
+    private Random rng = new Random();
+    
     /**
      * The main square board. This board is used for the game itself.
      */
     private SquareBoard board = null;
-
+    
     /**
      * The preview square board. This board is used to display a
      * preview of the figures.
      */
     private SquareBoard previewBoard = new SquareBoard(5, 5);
-
+    
     /**
      * The figures used on both boards. All figures are reutilized in
      * order to avoid creating new objects while the game is running.
@@ -78,67 +62,67 @@ public class Game {
      * current figure refers to the same object.
      */
     private Figure[] figures = {
-        new Figure(Figure.SQUARE_FIGURE),
-        new Figure(Figure.LINE_FIGURE),
-        new Figure(Figure.S_FIGURE),
-        new Figure(Figure.Z_FIGURE),
-        new Figure(Figure.RIGHT_ANGLE_FIGURE),
-        new Figure(Figure.LEFT_ANGLE_FIGURE),
-        new Figure(Figure.TRIANGLE_FIGURE)
+            new Figure(Figure.SQUARE_FIGURE),
+            new Figure(Figure.LINE_FIGURE),
+            new Figure(Figure.S_FIGURE),
+            new Figure(Figure.Z_FIGURE),
+            new Figure(Figure.RIGHT_ANGLE_FIGURE),
+            new Figure(Figure.LEFT_ANGLE_FIGURE),
+            new Figure(Figure.TRIANGLE_FIGURE)
     };
-
+    
     /**
      * The graphical game component. This component is created on the
      * first call to getComponent().
      */
-    private GamePanel component = null;
-
+    private GamePanel component;
+    
     /**
      * The thread that runs the game. When this variable is set to
      * null, the game thread will terminate.
      */
-    private GameThread thread = null;
-
+    private GameThread thread;
+    
     /**
      * The game level. The level will be increased for every 20 lines
      * removed from the square board.
      */
     private int level = 2;
-
+    
     /**
      * The current score. The score is increased for every figure that
      * is possible to place on the main board.
      */
-    private int score = 0;
-
+    private int score;
+    
     /**
      * The current figure. The figure will be updated when
      */
-    private Figure figure = null;
-
+    private Figure figure;
+    
     /**
      * The next figure.
      */
-    private Figure nextFigure = null;
+    private Figure nextFigure;
     
     /**
      * The rotation of the next figure.
      */
-    private int nextRotation = 0;
-
+    private int nextRotation;
+    
     /**
      * The figure preview flag. If this flag is set, the figure
      * will be shown in the figure preview board.
      */
     private boolean preview = true;
-
+    
     /**
      * The move lock flag. If this flag is set, the current figure
      * cannot be moved. This flag is set when a figure is moved all
      * the way down, and reset when a new figure is displayed.
      */
-    private boolean moveLock = false;
-
+    private boolean moveLock;
+    
     /**
      * Creates a new Tetris game. The square board will be given
      * the default size of 10x20.
@@ -146,30 +130,21 @@ public class Game {
     public Game() {
         this(10, 20);
     }
-
+    
     /**
      * Creates a new Tetris game. The square board will be given
      * the specified size.
      *
-     * @param width     the width of the square board (in positions)
-     * @param height    the height of the square board (in positions)
+     * @param width  the width of the square board (in positions)
+     * @param height the height of the square board (in positions)
      */
     public Game(int width, int height) {
         board = new SquareBoard(width, height);
         board.setMessage("Press start");
         thread = new GameThread();
-		brain = new Brain(new Species(500, 10, 50, 20));
-		rng = new Random(51);
+        brain = new Brain(new Species(500, 10, 50, 20));
     }
-	
-	public static Game newAiGame() {
-        Game game = new Game();
-        game.isAiGame = true;
-        game.board = new AiSquareBoard(10, 20);
-        game.thread = game.new GameThread();
-        return game;
-    }
-
+    
     /**
      * Kills the game running thread and makes necessary clean-up.
      * After calling this method, no further methods in this class
@@ -179,7 +154,7 @@ public class Game {
     public void quit() {
         thread = null;
     }
-
+    
     /**
      * Returns a new component that draws the game.
      *
@@ -191,33 +166,35 @@ public class Game {
         }
         return component;
     }
-
+    
     /**
      * Handles a game start event. Both the main and preview square
      * boards will be reset, and all other game parameters will be
      * reset. Finally the game thread will be launched.
      */
     private void handleStart() {
-        // Reset score and figures
-        level = 2;
         score = 0;
         figure = null;
         nextFigure = randomFigure();
         //nextFigure.rotateRandom();
         nextRotation = nextFigure.getRotation();
-
+        
         // Reset components
-        board.setMessage(null);
         board.clear();
+        
+        
+        level = 2;
+        board.setMessage(null);
         previewBoard.clear();
         handleLevelModification();
         handleScoreModification();
         component.button.setLabel("Pause");
-
+        
+        
         // Start game thread
         thread.reset();
     }
-
+    
     /**
      * Handles a game over event. This will stop the game thread,
      * reset all figures and print a game over message.
@@ -225,7 +202,7 @@ public class Game {
     private void handleGameOver() {
         // Stop game thread
         thread.setPaused(true);
-
+        
         // Reset figures
         if (figure != null) {
             figure.detach();
@@ -235,16 +212,14 @@ public class Game {
             nextFigure.detach();
         }
         nextFigure = null;
-
-        if (!isAiGame) {
-            // Handle components
-            board.setMessage("Game Over");
-            component.button.setLabel("Start");
-        } else {
-            support.firePropertyChange("result", null, score);
-        }
+        
+        
+        // Handle components
+        board.setMessage("Game Over");
+        component.button.setLabel("Start");
+        
     }
-
+    
     /**
      * Handles a game pause event. This will pause the game thread and
      * print a pause message on the game board.
@@ -254,7 +229,7 @@ public class Game {
         board.setMessage("Paused");
         component.button.setLabel("Resume");
     }
-
+    
     /**
      * Handles a game resume event. This will resume the game thread
      * and remove any messages on the game board.
@@ -264,7 +239,7 @@ public class Game {
         component.button.setLabel("Pause");
         thread.setPaused(false);
     }
-
+    
     /**
      * Handles a level modification event. This will modify the level
      * label and adjust the thread speed.
@@ -281,7 +256,7 @@ public class Game {
     private void handleScoreModification() {
         component.scoreLabel.setText("Score: " + score);
     }
-
+    
     /**
      * Handles a figure start event. This will move the next figure
      * to the current figure position, while also creating a new
@@ -289,8 +264,8 @@ public class Game {
      * game board, a game over event will be launched.
      */
     private void handleFigureStart() {
-        int  rotation;
-
+        int rotation;
+        
         // Move next figure to current
         figure = nextFigure;
         moveLock = false;
@@ -298,14 +273,14 @@ public class Game {
         nextFigure = randomFigure();
         //nextFigure.rotateRandom();
         nextRotation = nextFigure.getRotation();
-
+        
         // Handle figure preview
         if (preview) {
             previewBoard.clear();
             nextFigure.attach(previewBoard, true);
             nextFigure.detach();
         }
-
+        
         // Attach figure to game board
         figure.setRotation(rotation);
         if (!figure.attach(board, false)) {
@@ -315,7 +290,7 @@ public class Game {
             handleGameOver();
         }
     }
-
+    
     /**
      * Handles a figure landed event. This will check that the figure
      * is completely visible, or a game over event will be launched.
@@ -326,83 +301,82 @@ public class Game {
     private void handleFigureLanded() {
         // Check and detach figure
         if (figure.isAllVisible()) {
-			score += 10;
-			handleScoreModification();
+            score += 10;
+            handleScoreModification();
         } else {
             handleGameOver();
             return;
         }
         figure.detach();
         figure = null;
-
+        
         // Check for full lines or create new figure
         if (board.hasFullLines()) {
-			board.removeFullLines();
-			if (level < 9 && board.getRemovedLines() / 20 > level) {
-				level = board.getRemovedLines() / 20;
-				handleLevelModification();
-			}
+            board.removeFullLines();
+            if (level < 9 && board.getRemovedLines() / 20 > level) {
+                level = board.getRemovedLines() / 20;
+                handleLevelModification();
+            }
         } else {
             handleFigureStart();
         }
     }
-	
-	/**
+    
+    /**
      * Handles a timer event. This will normally move the figure down
      * one step, but when a figure has landed or isn't ready other
      * events will be launched. This method is synchronized to avoid
      * race conditions with other asynchronous events (keyboard and
      * mouse).
      */
-	private synchronized void handleTimer() {
+    private synchronized void handleTimer() {
         if (figure == null) {
             handleFigureStart();
         } else if (figure.hasLanded() && positionChosen) {
             handleFigureLanded();
-			positionChosen = false;
+            positionChosen = false;
         } else if (!positionChosen) {
 //			System.out.println("handleTimer positionNotChosen");
-			String[] moves = brain.getFigureMoves(board, figure);
-			moveFigure(moves);
-			positionChosen = true;
-		} else {
-			// figure is directly above the chosen position for landing
-			System.out.println("moveAllWayDown");
+            String[] moves = brain.getFigureMoves(board, figure);
+            moveFigure(moves);
+            positionChosen = true;
+        } else {
+            // figure is directly above the chosen position for landing
+            System.out.println("moveAllWayDown");
             figure.moveAllWayDown();
             moveLock = true;
         }
     }
-	
-	private void moveFigure(String[] moves) {
-		for (String move: moves) {
-			switch (move) {
-				case "Down":
-					figure.moveDown();
-					break;
-				case "Left":
-					figure.moveLeft();
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException ignore) {
-						// Do nothing
-					}
-					break;
-				case "Right":
-					figure.moveRight();
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException ignore) {
-						// Do nothing
-					}
-					break;
-				case "Turn": // clockwise
-					figure.rotateClockwise();
-					break;
-			}
-		}
-	}
-	
-	/**
+    
+    private void moveFigure(String[] moves) {
+        for (String move : moves) {
+            switch (move) {
+                case "Down":
+                    figure.moveDown();
+                    break;
+                case "Left":
+                    figure.moveLeft();
+//					delay(50);
+                    break;
+                case "Right":
+                    figure.moveRight();
+                    break;
+                case "Rotate": // clockwise
+                    figure.rotateClockwise();
+                    break;
+            }
+        }
+    }
+    
+    private void delay(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException ignore) {
+            // Do nothing
+        }
+    }
+    
+    /**
      * Handles a button press event. This will launch different events
      * depending on the state of the game, as the button semantics
      * change as the game changes. This method is synchronized to
@@ -418,7 +392,7 @@ public class Game {
             handlePause();
         }
     }
-
+    
     /**
      * Handles a keyboard event. This will result in different actions
      * being taken, depending on the key pressed. In some cases, other
@@ -426,68 +400,68 @@ public class Game {
      * race conditions with other asynchronous events (timer and
      * mouse).
      *
-     * @param e         the key event
+     * @param e the key event
      */
     private synchronized void handleKeyEvent(KeyEvent e) {
-
+        
         // Handle start, pause and resume
         if (e.getKeyCode() == KeyEvent.VK_P) {
             handleButtonPressed();
             return;
         }
-
+        
         // Don't proceed if stopped or paused
         if (figure == null || moveLock || thread.isPaused()) {
             return;
         }
-
+        
         // Handle remaining key events
         switch (e.getKeyCode()) {
-
-        case KeyEvent.VK_LEFT:
-            figure.moveLeft();
-            break;
-
-        case KeyEvent.VK_RIGHT:
-            figure.moveRight();
-            break;
-
-        case KeyEvent.VK_DOWN:
-            figure.moveAllWayDown();
-            moveLock = true;
-            break;
-
-        case KeyEvent.VK_UP:
-        case KeyEvent.VK_SPACE:
-            if (e.isControlDown()) {
-                figure.rotateRandom();
-            } else if (e.isShiftDown()) {
-                figure.rotateClockwise();
-            } else {
-                figure.rotateCounterClockwise();
-            }
-            break;
-
-        case KeyEvent.VK_S:
-            if (level < 9) {
-                //level++;
-				level = 9;
-                handleLevelModification();
-            }
-            break;
-
-        case KeyEvent.VK_N:
-            preview = !preview;
-            if (preview && figure != nextFigure) {
-                nextFigure.attach(previewBoard, true);
-                nextFigure.detach();
-            } else {
-                previewBoard.clear();
-            }
-            break;
+            
+            case KeyEvent.VK_LEFT:
+                figure.moveLeft();
+                break;
+            
+            case KeyEvent.VK_RIGHT:
+                figure.moveRight();
+                break;
+            
+            case KeyEvent.VK_DOWN:
+                figure.moveAllWayDown();
+                moveLock = true;
+                break;
+            
+            case KeyEvent.VK_UP:
+            case KeyEvent.VK_SPACE:
+                if (e.isControlDown()) {
+                    figure.rotateRandom();
+                } else if (e.isShiftDown()) {
+                    figure.rotateClockwise();
+                } else {
+                    figure.rotateCounterClockwise();
+                }
+                break;
+            
+            case KeyEvent.VK_S:
+                if (level < 9) {
+                    //level++;
+                    level = 9;
+                    handleLevelModification();
+                }
+                break;
+            
+            case KeyEvent.VK_N:
+                preview = !preview;
+                if (preview && figure != nextFigure) {
+                    nextFigure.attach(previewBoard, true);
+                    nextFigure.detach();
+                } else {
+                    previewBoard.clear();
+                }
+                break;
         }
     }
-
+    
     /**
      * Returns a random figure. The figures come from the figures
      * array, and will not be initialized.
@@ -495,10 +469,8 @@ public class Game {
      * @return a random figure
      */
     private Figure randomFigure() {
-		return figures[rng.nextInt(figures.length)];
+        return figures[rng.nextInt(figures.length)];
     }
-    
-    
     
     
     /**
@@ -513,19 +485,19 @@ public class Game {
          * game should pause.
          */
         private boolean paused = true;
-
+        
         /**
          * The number of milliseconds to sleep before each automatic
          * move. This number will be lowered as the game progresses.
          */
         private int sleepTime = 500;
-
+        
         /**
          * Creates a new game thread with default values.
          */
-		public GameThread() {
-		}
-
+        public GameThread() {
+        }
+        
         /**
          * Resets the game thread. This will adjust the speed and
          * start the game thread if not previously started.
@@ -537,26 +509,26 @@ public class Game {
                 this.start();
             }
         }
-
+        
         /**
          * Checks if the thread is paused.
          *
          * @return true if the thread is paused, or
-         *         false otherwise
+         * false otherwise
          */
         public boolean isPaused() {
             return paused;
         }
-
+        
         /**
          * Sets the thread pause flag.
          *
-         * @param paused     the new paused flag value
+         * @param paused the new paused flag value
          */
         public void setPaused(boolean paused) {
             this.paused = paused;
         }
-
+        
         /**
          * Adjusts the game speed according to the current level. The
          * sleeping time is calculated with a function making larger
@@ -564,42 +536,37 @@ public class Game {
          * above ten (10) doesn't have any further effect.
          */
         public void adjustSpeed() {
-            if (!isAiGame) {
-				sleepTime = 4500 / (level + 5) - 250;
-				if (sleepTime < 50) {
-					sleepTime = 50;
-				}
-			}
+            sleepTime = 4500 / (level + 5) - 250;
+            if (sleepTime < 50) {
+                sleepTime = 50;
+            }
         }
-
+        
         /**
          * Runs the game.
          */
         public void run() {
             while (thread == this) {
-				if (isAiGame) {
-					handleTimer();
-				} else {
-					// Make the time step
-					handleTimer();
-					
-					// Sleep for some time
-					try {
-						Thread.sleep(sleepTime);
-					} catch (InterruptedException ignore) {
-						// Do nothing
-					}
-
-					// Sleep if paused
-					while (paused && thread == this) {
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException ignore) {
-							// Do nothing
-						}
-					}
-				}
+                // Make the time step
+                handleTimer();
+                
+                // Sleep for some time
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException ignore) {
+                    // Do nothing
+                }
+                
+                // Sleep if paused
+                while (paused && thread == this) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ignore) {
+                        // Do nothing
+                    }
+                }
             }
+            
         }
     }
     
@@ -610,7 +577,7 @@ public class Game {
     public void start() {
         handleStart();
     }
-
+    
     /**
      * A game panel component. Contains all the game components.
      */
@@ -621,23 +588,23 @@ public class Game {
          * will be detected when the paint method executes. If this
          * value is set to null, the component dimensions are unknown.
          */
-        private Dimension  size = null;
-
+        private Dimension size = null;
+        
         /**
          * The score label.
          */
         private Label scoreLabel = new Label("Score: 0");
-
+        
         /**
          * The level label.
          */
         private Label levelLabel = new Label("Level: 1");
-
+        
         /**
          * The generic button.
          */
         private Button button = new Button("Start");
-
+        
         /**
          * Creates a new game panel. All the components will
          * also be added to the panel.
@@ -646,17 +613,17 @@ public class Game {
             super();
             initComponents();
         }
-
+        
         /**
          * Paints the game component. This method is overridden from
          * the default implementation in order to set the correct
          * background color.
          *
-         * @param g     the graphics context to use
+         * @param g the graphics context to use
          */
         public void paint(Graphics g) {
-            Rectangle  rect = g.getClipBounds();
-
+            Rectangle rect = g.getClipBounds();
+            
             if (size == null || !size.equals(getSize())) {
                 size = getSize();
                 resizeComponents();
@@ -671,12 +638,12 @@ public class Game {
          * the panel.
          */
         private void initComponents() {
-            GridBagConstraints  c;
-
+            GridBagConstraints c;
+            
             // Set layout manager and background
             setLayout(new GridBagLayout());
             setBackground(Configuration.getColor("background", "#d4d0c8"));
-
+            
             // Add game board
             c = new GridBagConstraints();
             c.gridx = 0;
@@ -686,7 +653,7 @@ public class Game {
             c.weighty = 1.0;
             c.fill = GridBagConstraints.BOTH;
             this.add(board.getComponent(), c);
-
+            
             // Add next figure board
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -696,10 +663,10 @@ public class Game {
             c.fill = GridBagConstraints.BOTH;
             c.insets = new Insets(15, 15, 0, 15);
             this.add(previewBoard.getComponent(), c);
-
+            
             // Add score label
             scoreLabel.setForeground(Configuration.getColor("label",
-                                                            "#000000"));
+                    "#000000"));
             scoreLabel.setAlignment(Label.CENTER);
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -710,10 +677,10 @@ public class Game {
             c.fill = GridBagConstraints.BOTH;
             c.insets = new Insets(0, 15, 0, 15);
             this.add(scoreLabel, c);
-
+            
             // Add level label
             levelLabel.setForeground(Configuration.getColor("label",
-                                                            "#000000"));
+                    "#000000"));
             levelLabel.setAlignment(Label.CENTER);
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -724,7 +691,7 @@ public class Game {
             c.fill = GridBagConstraints.BOTH;
             c.insets = new Insets(0, 15, 0, 15);
             this.add(levelLabel, c);
-
+            
             // Add generic button
             button.setBackground(Configuration.getColor("button", "#d4d0c8"));
             c = new GridBagConstraints();
@@ -736,7 +703,7 @@ public class Game {
             c.fill = GridBagConstraints.HORIZONTAL;
             c.insets = new Insets(15, 15, 15, 15);
             this.add(button, c);
-
+            
             // Add event handling
             enableEvents(KeyEvent.KEY_EVENT_MASK);
             this.addKeyListener(new KeyAdapter() {
@@ -757,9 +724,9 @@ public class Game {
          * current layout.
          */
         private void resizeComponents() {
-            Dimension  size = scoreLabel.getSize();
-            Font       font;
-            int        unitSize;
+            Dimension size = scoreLabel.getSize();
+            Font font;
+            int unitSize;
             
             // Calculate the unit size
             size = board.getComponent().getSize();
@@ -770,16 +737,16 @@ public class Game {
             } else {
                 unitSize = size.width;
             }
-
+            
             // Adjust font sizes
             font = new Font("SansSerif",
-                            Font.BOLD,
-                            3 + (int) (unitSize / 1.8));
+                    Font.BOLD,
+                    3 + (int) (unitSize / 1.8));
             scoreLabel.setFont(font);
             levelLabel.setFont(font);
             font = new Font("SansSerif",
-                            Font.PLAIN,
-                            2 + unitSize / 2);
+                    Font.PLAIN,
+                    2 + unitSize / 2);
             button.setFont(font);
             
             // Invalidate layout

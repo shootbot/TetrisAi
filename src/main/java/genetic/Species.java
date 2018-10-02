@@ -41,7 +41,7 @@ public class Species implements Comparable {
     
     public int compareTo(Object ob) {
         Species other = (Species) ob;
-        return Double.compare(score, other.score);
+        return -Double.compare(score, other.score);
     }
     
     public String toString() {
@@ -49,7 +49,7 @@ public class Species implements Comparable {
                 + ", roof: " + roofPenalty
                 + ", square: " + squarePenalty
                 + ", cliff: " + cliffPenalty
-                + ", score: " + score + "}";
+                + "}";
         return answer;
     }
     
